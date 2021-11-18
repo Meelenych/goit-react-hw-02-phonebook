@@ -45,13 +45,25 @@ class App extends Component {
         return this.setState({ phoneNumber: e.target.value });
     };
 
-    filter = (e) => {
+    filterFunc = (e) => {
         return this.setState({filter: e.target.value })
     };
 
 
+    getFilteredElems = () => {
+        const normalizedElem = this.state.filter.toLowerCase();
+        const stateNormElems = this.state.contacts.filter((elem) => {
+            return elem.name.toLowerCase().includes(normalizedElem)
+        })
+        
+        return stateNormElems
+
+    }
+   
+
     render() {    
-     
+        const filteredContact = this.getFilteredElems();
+
         return (        
             <div class = "container">         
                 <ContactForm
@@ -60,12 +72,13 @@ class App extends Component {
                     phoneChange={this.phoneChange}
                 />
                 <Filter
-                    filter={this.filter}                    
+                    filter={this.filterFunc}                    
                 />
                 <ContactList
-                    contacts={this.state.contacts}
-                    state={this.state}                    
-                    delContact={this.delContact}    
+                    contacts={filteredContact}
+                            
+                    delContact={this.delContact}
+                    
                 />
             </div>
         );
