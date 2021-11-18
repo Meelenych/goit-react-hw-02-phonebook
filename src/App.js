@@ -1,40 +1,75 @@
 import "./App.css";
-//Profile
-import Profile from "./components/Profile/Profile";
-import user from "./components/Profile/user.json";
-//Statistics
-import Statistics from "./components/Statistics/Statistics";
-import statisticalData from "./components/Statistics/statistical-data.json";
-//Friends
-import FriendList from "./components/FriendList/FriendList";
-import friends from "./components/FriendList/friends.json";
-//Transactions
-import TransactionHistory from "./components/TransactionHistory/TransactionHistory";
-import transactions from "./components/TransactionHistory/transactions.json";
+import { Component } from 'react';
+import ContactForm from "./components/ContactForm/ContactForm"
+import ContactList from "./components/ContactList/ContactList"
+import Filter from "./components/Filter/Filter"
+import { v4 as uuidv4 } from 'uuid';
 
-const {
-  name,
-  tag,
-  location,
-  avatar,
-  stats: { followers, views, likes },
-} = user;
+class App extends Component {
+    
+  state = {
+    contacts: [
+      { id: uuidv4(), name: 'Rosie Simpson', phoneNumber: '459-12-56' },
+      { id: uuidv4(), name: 'Hermione Kline', phoneNumber: '443-89-12' },
+      { id: uuidv4(), name: 'Eden Clements', phoneNumber: '645-17-79' },
+      { id: uuidv4(), name: 'Annie Copeland', phoneNumber: '227-91-26' },
+    ],
+    filter: '',
+  };
+    
+    addContact = () => {
+        if (this.state.contacts.find((contact) => {
+            return contact.name === this.state.name;
+        }))
+        {
+            alert(`${this.state.name} is already in contacts!`);
+        }
+        else {
+        const newContact = { id: uuidv4(), name: this.state.name, phoneNumber: this.state.phoneNumber };
+        this.setState(({ contacts }) => ({ contacts: [newContact, ...contacts] }));
+        };
+    }
 
-function App() {
-  return (
-    <>
-      <Profile
-        avatar={avatar}
-        name={name}
-        tag={tag}
-        location={location}
-        followers={followers}
-        views={views}
-        likes={likes}
-      />
+    delContact = (e) => {
+        const elementToDel = this.state.contacts.find((item) => item.id === e.target.id);
+        const index = this.state.contacts.indexOf(elementToDel);        
+        this.state.contacts.splice(index, 1);        
+        this.setState({ contacts: [...this.state.contacts] });        
+    };
 
-    </>
-  );
+    nameChange = (e) => {
+        return this.setState({ name: e.target.value });
+    };
+
+    phoneChange = (e) => {
+        return this.setState({ phoneNumber: e.target.value });
+    };
+
+    filter = (e) => {
+        return this.setState({filter: e.target.value })
+    };
+
+
+    render() {    
+     
+        return (        
+            <>         
+                <ContactForm
+                    addContact={this.addContact}
+                    nameChange={this.nameChange}
+                    phoneChange={this.phoneChange}
+                />
+                <Filter
+                    filter={this.filter}                    
+                />
+                <ContactList
+                    contacts={this.state.contacts}
+                    state={this.state}                    
+                    delContact={this.delContact}    
+                />
+            </>
+        );
+    }
 }
 
 export default App;
