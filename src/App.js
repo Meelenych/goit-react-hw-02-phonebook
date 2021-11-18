@@ -53,7 +53,7 @@ class App extends Component {
     render() {    
      
         return (        
-            <>         
+            <div class = "container">         
                 <ContactForm
                     addContact={this.addContact}
                     nameChange={this.nameChange}
@@ -67,7 +67,7 @@ class App extends Component {
                     state={this.state}                    
                     delContact={this.delContact}    
                 />
-            </>
+            </div>
         );
     }
 }
